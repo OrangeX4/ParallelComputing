@@ -3,6 +3,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import MergeSort.MergeSort;
 import QuickSort.QuickSort;
 import QuickSort.ParallelQuickSort;
 
@@ -76,24 +78,40 @@ class Test {
         } else {
             System.out.println("QuickSort - serial done.");
         }
-
+        
         // 2. 快速排序 - 并行版
-        System.out.println("QuickSort - parallel: order2.txt");
+        // System.out.println("QuickSort - parallel: order2.txt");
+        // // 统计时间
+        // startTime = System.nanoTime();
+        // quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
+        // endTime = System.nanoTime();
+        // duration = (endTime - startTime) / 1000000;
+        // // 输出花费时间
+        // System.out.println("QuickSort - parallel: " + duration + " ms");
+        // writeOutput(outputPath + "order2.txt", quickSorted);
+        // if (verify) {
+        //     System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
+        // } else {
+        //     System.out.println("QuickSort - parallel done.");
+        // }
+
+        // 5. 归并排序 - 串行版
+        System.out.println("MergeSort - serial: order1.txt");
         // 统计时间
         startTime = System.nanoTime();
-        quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
+        List<Integer> mergeSorted = MergeSort.mergeSort(numbers);
         endTime = System.nanoTime();
         duration = (endTime - startTime) / 1000000;
         // 输出花费时间
-        System.out.println("QuickSort - parallel: " + duration + " ms");
-        writeOutput(outputPath + "order2.txt", quickSorted);
+        System.out.println("MergeSort - serial: " + duration + " ms");
+        writeOutput(outputPath + "order1.txt", mergeSorted);
         if (verify) {
-            System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
+            System.out.println("MergeSort - serial: " + mergeSorted.equals(sortedNumbers));
         } else {
-            System.out.println("QuickSort - parallel done.");
+            System.out.println("MergeSort - serial done.");
         }
     }
-
+    
     public static void main(String[] args) {
         String inputFile = "random.txt";
         // 是否检验排序结果

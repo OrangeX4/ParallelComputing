@@ -1,5 +1,6 @@
 package QuickSort;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
@@ -50,8 +51,9 @@ public class ParallelQuickSort extends RecursiveAction {
     }
 
     public static List<Integer> parallelQuickSort(List<Integer> numbers) {
+        List<Integer> sortedNumbers = new ArrayList<>(numbers);
         ForkJoinPool pool = ForkJoinPool.commonPool();
-        ParallelQuickSort task = new ParallelQuickSort(numbers, 0, numbers.size() - 1);
+        ParallelQuickSort task = new ParallelQuickSort(sortedNumbers, 0, sortedNumbers.size() - 1);
         pool.invoke(task);
         return task.numbers;
     }
