@@ -4,9 +4,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import MergeSort.MergeSort;
 import QuickSort.QuickSort;
 import QuickSort.ParallelQuickSort;
+import MergeSort.MergeSort;
+import MergeSort.ParallelMergeSort;
 
 class Test {
 
@@ -80,23 +81,23 @@ class Test {
         }
         
         // 2. 快速排序 - 并行版
-        // System.out.println("QuickSort - parallel: order2.txt");
-        // // 统计时间
-        // startTime = System.nanoTime();
-        // quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
-        // endTime = System.nanoTime();
-        // duration = (endTime - startTime) / 1000000;
-        // // 输出花费时间
-        // System.out.println("QuickSort - parallel: " + duration + " ms");
-        // writeOutput(outputPath + "order2.txt", quickSorted);
-        // if (verify) {
-        //     System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
-        // } else {
-        //     System.out.println("QuickSort - parallel done.");
-        // }
-
+        System.out.println("QuickSort - parallel: order2.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("QuickSort - parallel: " + duration + " ms");
+        writeOutput(outputPath + "order2.txt", quickSorted);
+        if (verify) {
+            System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
+        } else {
+            System.out.println("QuickSort - parallel done.");
+        }
+        
         // 5. 归并排序 - 串行版
-        System.out.println("MergeSort - serial: order1.txt");
+        System.out.println("MergeSort - serial: order5.txt");
         // 统计时间
         startTime = System.nanoTime();
         List<Integer> mergeSorted = MergeSort.mergeSort(numbers);
@@ -104,11 +105,27 @@ class Test {
         duration = (endTime - startTime) / 1000000;
         // 输出花费时间
         System.out.println("MergeSort - serial: " + duration + " ms");
-        writeOutput(outputPath + "order1.txt", mergeSorted);
+        writeOutput(outputPath + "order5.txt", mergeSorted);
         if (verify) {
             System.out.println("MergeSort - serial: " + mergeSorted.equals(sortedNumbers));
         } else {
             System.out.println("MergeSort - serial done.");
+        }
+
+        // 6. 归并排序 - 并行版
+        System.out.println("MergeSort - parallel: order6.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        quickSorted = ParallelMergeSort.parallelMergeSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("MergeSort - parallel: " + duration + " ms");
+        writeOutput(outputPath + "order6.txt", quickSorted);
+        if (verify) {
+            System.out.println("MergeSort - parallel: " + quickSorted.equals(sortedNumbers));
+        } else {
+            System.out.println("MergeSort - parallel done.");
         }
     }
     
