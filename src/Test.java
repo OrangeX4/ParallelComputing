@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import QuickSort.QuickSort;
+import QuickSort.ParallelQuickSort;
 
 class Test {
 
@@ -61,19 +62,35 @@ class Test {
         
         // 开始测试不同的算法
         // 1. 快速排序 - 串行版
-        System.out.println("QuickSort - serial : order1.txt");
+        System.out.println("QuickSort - serial: order1.txt");
         // 统计时间
         long startTime = System.nanoTime();
         List<Integer> quickSorted = QuickSort.quickSort(numbers);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
-        System.out.println("QuickSort: " + duration + " ms");
+        System.out.println("QuickSort - serial: " + duration + " ms");
         writeOutput(outputPath + "order1.txt", quickSorted);
         if (verify) {
             // 输出花费时间
-            System.out.println("QuickSort: " + quickSorted.equals(sortedNumbers));
+            System.out.println("QuickSort - serial: " + quickSorted.equals(sortedNumbers));
         } else {
-            System.out.println("QuickSort done.");
+            System.out.println("QuickSort - serial done.");
+        }
+
+        // 2. 快速排序 - 并行版
+        System.out.println("QuickSort - parallel: order2.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        System.out.println("QuickSort - parallel: " + duration + " ms");
+        writeOutput(outputPath + "order2.txt", quickSorted);
+        if (verify) {
+            // 输出花费时间
+            System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
+        } else {
+            System.out.println("QuickSort - parallel done.");
         }
     }
 

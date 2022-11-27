@@ -1,38 +1,62 @@
 package QuickSort;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 
-public class ParallelQuickSort {
+
+public class ParallelQuickSort extends RecursiveTask<List<Integer>> {
+
+    private List<Integer> numbers;
+
+    public ParallelQuickSort(List<Integer> numbers) {
+        this.numbers = numbers;
+    }
+
     private static void swap(List<Integer> numbers, int i, int j) {
         int temp = numbers.get(i);
         numbers.set(i, numbers.get(j));
         numbers.set(j, temp);
     }
 
-    private static int partition(List<Integer> numbers, int left, int right) {
-        int pivot = numbers.get(right);
-        int i = left - 1;
-        for (int j = left; j < right; j++) {
+    private static int partition(List<Integer> numbers) {
+        int pivot = numbers.get(numbers.size() - 1);
+        int i = - 1;
+        for (int j = 0; j < numbers.size() - 1; j++) {
             if (numbers.get(j) <= pivot) {
                 i++;
                 swap(numbers, i, j);
             }
         }
-        swap(numbers, i + 1, right);
+        swap(numbers, i + 1, numbers.size() - 1);
         return i + 1;
     }
-
-    private static void _quickSort(List<Integer> numbers, int left, int right) {
-        if (left < right) {
-            int pivot = partition(numbers, left, right);
-            _quickSort(numbers, left, pivot - 1);
-            _quickSort(numbers, pivot + 1, right);
+    
+    @Override
+    protected List<Integer> compute() {
+        if (numbers.size() <= 2) {
+            return numbers;
         }
+        int pivot = partition(numbers);
+        ParallelQuickSort leftTask = new ParallelQuickSort(numbers.subList(0, pivot));
+        ParallelQuickSort rightTask = new ParallelQuickSort(numbers.subList(pivot + 1, numbers.size()));
+
+        leftTask.fork();
+        rightTask.fork();
+
+        List<Integer> left = leftTask.join();
+        List<Integer> right = rightTask.join();
+
+        List<Integer> sortedNumbers = new ArrayList<>(left);
+        sortedNumbers.add(numbers.get(pivot));
+        sortedNumbers.addAll(right);
+        return sortedNumbers;
     }
 
-    public static List<Integer> quickSort(List<Integer> numbers) {
-        List<Integer> sortedNumbers = new ArrayList<>(numbers);
-        _quickSort(sortedNumbers, 0, sortedNumbers.size() - 1);
+    public static List<Integer> parallelQuickSort(List<Integer> numbers) {
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        ParallelQuickSort task = new ParallelQuickSort(numbers);
+        List<Integer> sortedNumbers = pool.invoke(task);
         return sortedNumbers;
     }
 }

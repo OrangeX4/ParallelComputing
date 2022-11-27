@@ -2,7 +2,7 @@ package QuickSort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickSort {
+public class QuickSort<T extends Comparable<T>> {
     private static void swap(List<Integer> numbers, int i, int j) {
         int temp = numbers.get(i);
         numbers.set(i, numbers.get(j));
