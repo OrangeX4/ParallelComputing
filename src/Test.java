@@ -68,10 +68,10 @@ class Test {
         List<Integer> quickSorted = QuickSort.quickSort(numbers);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
         System.out.println("QuickSort - serial: " + duration + " ms");
         writeOutput(outputPath + "order1.txt", quickSorted);
         if (verify) {
-            // 输出花费时间
             System.out.println("QuickSort - serial: " + quickSorted.equals(sortedNumbers));
         } else {
             System.out.println("QuickSort - serial done.");
@@ -84,10 +84,10 @@ class Test {
         quickSorted = ParallelQuickSort.parallelQuickSort(numbers);
         endTime = System.nanoTime();
         duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
         System.out.println("QuickSort - parallel: " + duration + " ms");
         writeOutput(outputPath + "order2.txt", quickSorted);
         if (verify) {
-            // 输出花费时间
             System.out.println("QuickSort - parallel: " + quickSorted.equals(sortedNumbers));
         } else {
             System.out.println("QuickSort - parallel done.");
