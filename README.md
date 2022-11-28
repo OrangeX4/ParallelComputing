@@ -1,33 +1,3 @@
-<style>
-h1 {
-    text-align: center;
-}
-h2, h3 {
-    page-break-after: avoid; 
-}
-.center {
-    margin: 0 auto;
-    width: fit-content;
-    margin-top: 2em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    margin-bottom: 2em;
-}
-.title {
-    font-weight: bold;
-    border-top-style: solid;
-    border-bottom-style: solid;
-}
-.newpage {
-    page-break-after: always
-}
-@media print {
-    @page {
-        margin: 3cm;
-    }
-}
-</style>
-
 <h1 style="margin-top: 4em">
 分布式与并行计算实验报告
 </h1>
