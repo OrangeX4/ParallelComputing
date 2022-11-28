@@ -9,7 +9,8 @@ public class RankSort {
         for (int i = 0; i < numbers.size(); i++) {
             int rank = 0;
             for (int j = 0; j < numbers.size(); j++) {
-                if (numbers.get(j) < numbers.get(i) || (numbers.get(j) == numbers.get(i) && j < i)) {
+                if (numbers.get(j) < numbers.get(i)
+                        || (numbers.get(j) == numbers.get(i) && j < i)) {
                     rank++;
                 }
             }
