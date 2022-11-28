@@ -82,37 +82,37 @@ class Test {
             System.out.println("QuickSort - serial done.");
         }
         
-        // // 2. 快速排序 - 并行版
-        // System.out.println("QuickSort - parallel: order2.txt");
-        // // 统计时间
-        // startTime = System.nanoTime();
-        // sorted = ParallelQuickSort.parallelQuickSort(numbers);
-        // endTime = System.nanoTime();
-        // duration = (endTime - startTime) / 1000000;
-        // // 输出花费时间
-        // System.out.println("QuickSort - parallel: " + duration + " ms");
-        // writeOutput(outputPath + "order2.txt", sorted);
-        // if (verify) {
-        //     System.out.println("QuickSort - parallel: " + sorted.equals(sortedNumbers));
-        // } else {
-        //     System.out.println("QuickSort - parallel done.");
-        // }
+        // 2. 快速排序 - 并行版
+        System.out.println("QuickSort - parallel: order2.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        sorted = ParallelQuickSort.parallelQuickSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("QuickSort - parallel: " + duration + " ms");
+        writeOutput(outputPath + "order2.txt", sorted);
+        if (verify) {
+            System.out.println("QuickSort - parallel: " + sorted.equals(sortedNumbers));
+        } else {
+            System.out.println("QuickSort - parallel done.");
+        }
         
-        // // 3. 枚举排序 - 串行版
-        // System.out.println("RankSort - serial: order3.txt");
-        // // 统计时间
-        // startTime = System.nanoTime();
-        // sorted = RankSort.rankSort(numbers);
-        // endTime = System.nanoTime();
-        // duration = (endTime - startTime) / 1000000;
-        // // 输出花费时间
-        // System.out.println("RankSort - serial: " + duration + " ms");
-        // writeOutput(outputPath + "order3.txt", sorted);
-        // if (verify) {
-        //     System.out.println("RankSort - serial: " + sorted.equals(sortedNumbers));
-        // } else {
-        //     System.out.println("RankSort - serial done.");
-        // }
+        // 3. 枚举排序 - 串行版
+        System.out.println("RankSort - serial: order3.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        sorted = RankSort.rankSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("RankSort - serial: " + duration + " ms");
+        writeOutput(outputPath + "order3.txt", sorted);
+        if (verify) {
+            System.out.println("RankSort - serial: " + sorted.equals(sortedNumbers));
+        } else {
+            System.out.println("RankSort - serial done.");
+        }
 
         // 4. 枚举排序 - 并行版
         System.out.println("RankSort - parallel: order4.txt");
@@ -130,37 +130,37 @@ class Test {
             System.out.println("RankSort - parallel done.");
         }
         
-        // // 5. 归并排序 - 串行版
-        // System.out.println("MergeSort - serial: order5.txt");
-        // // 统计时间
-        // startTime = System.nanoTime();
-        // sorted = MergeSort.mergeSort(numbers);
-        // endTime = System.nanoTime();
-        // duration = (endTime - startTime) / 1000000;
-        // // 输出花费时间
-        // System.out.println("MergeSort - serial: " + duration + " ms");
-        // writeOutput(outputPath + "order5.txt", sorted);
-        // if (verify) {
-        //     System.out.println("MergeSort - serial: " + sorted.equals(sortedNumbers));
-        // } else {
-        //     System.out.println("MergeSort - serial done.");
-        // }
+        // 5. 归并排序 - 串行版
+        System.out.println("MergeSort - serial: order5.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        sorted = MergeSort.mergeSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("MergeSort - serial: " + duration + " ms");
+        writeOutput(outputPath + "order5.txt", sorted);
+        if (verify) {
+            System.out.println("MergeSort - serial: " + sorted.equals(sortedNumbers));
+        } else {
+            System.out.println("MergeSort - serial done.");
+        }
 
-        // // 6. 归并排序 - 并行版
-        // System.out.println("MergeSort - parallel: order6.txt");
-        // // 统计时间
-        // startTime = System.nanoTime();
-        // sorted = ParallelMergeSort.parallelMergeSort(numbers);
-        // endTime = System.nanoTime();
-        // duration = (endTime - startTime) / 1000000;
-        // // 输出花费时间
-        // System.out.println("MergeSort - parallel: " + duration + " ms");
-        // writeOutput(outputPath + "order6.txt", sorted);
-        // if (verify) {
-        //     System.out.println("MergeSort - parallel: " + sorted.equals(sortedNumbers));
-        // } else {
-        //     System.out.println("MergeSort - parallel done.");
-        // }
+        // 6. 归并排序 - 并行版
+        System.out.println("MergeSort - parallel: order6.txt");
+        // 统计时间
+        startTime = System.nanoTime();
+        sorted = ParallelMergeSort.parallelMergeSort(numbers);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000;
+        // 输出花费时间
+        System.out.println("MergeSort - parallel: " + duration + " ms");
+        writeOutput(outputPath + "order6.txt", sorted);
+        if (verify) {
+            System.out.println("MergeSort - parallel: " + sorted.equals(sortedNumbers));
+        } else {
+            System.out.println("MergeSort - parallel done.");
+        }
     }
     
     public static void main(String[] args) {
