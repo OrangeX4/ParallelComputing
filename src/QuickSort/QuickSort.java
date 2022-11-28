@@ -23,7 +23,7 @@ public class QuickSort {
         return i + 1;
     }
 
-    private static void _quickSort(List<Integer> numbers, int left, int right) {
+    public static void _quickSort(List<Integer> numbers, int left, int right) {
         if (left < right) {
             int pivot = partition(numbers, left, right);
             _quickSort(numbers, left, pivot - 1);

@@ -39,7 +39,7 @@ h2, h3 {
 <h3>姓名：方盛俊</h3>
 <h3>学号：201300035</h3>
 <h3>邮箱：201300035@smail.nju.edu.cn</h3>
-<h3>时间：2022年11月27日</h3>
+<h3>时间：2022年11月28日</h3>
 </div>
 
 <div class="newpage"></div>
@@ -68,6 +68,12 @@ h2, h3 {
 1. 比较各种算法的运行时间，请将运行时间记录在 2*3 的表格中。行分别表示串行、并行，列分别表示快速排序、枚举排序、归并排序。
 2. 撰写实验报告，包括并行算法的伪代码、运行时间、技术要点（如性能优化方法）等，结合各自的实验设备（如多核处理器）上的实验结果进行优化，并在实验报告中针对实验结果进行分析（考虑到并行算法多线程在单核处理器中的并行开销，有可能性能会比串行算法下降）。
 3. 独立完成实验，杜绝抄袭。
+
+**执行方式：**
+
+在 Java 8 或以上的版本，使用 VS Code 及插件 Extension Pack for Java 的环境。
+
+执行 `src/Test.java`，输入位于 `input/random.txt`，输出位于 `output/random/order*.txt`。
 
 
 ## 二、伪代码
@@ -222,7 +228,8 @@ Java 为我们设计分治任务提供了一个十分友好的 API，也就是 `
 
 ```java
 public class QuickSort {
-    private static void _quickSort(List<Integer> numbers, int left, int right) {
+    private static void _quickSort(
+        List<Integer> numbers, int left, int right) {
         if (left < right) {
             int pivot = partition(numbers, left, right);
             _quickSort(numbers, left, pivot - 1);
@@ -246,7 +253,8 @@ public class ParallelQuickSort extends RecursiveAction {
     private int left;
     private int right;
 
-    public ParallelQuickSort(List<Integer> numbers, int left, int right) {
+    public ParallelQuickSort(
+            List<Integer> numbers, int left, int right) {
         this.numbers = numbers;
         this.left = left;
         this.right = right;
@@ -256,8 +264,10 @@ public class ParallelQuickSort extends RecursiveAction {
     protected void compute() {
         if (left < right) {
             int pivot = partition(numbers, left, right);
-            ParallelQuickSort leftTask = new ParallelQuickSort(numbers, left, pivot - 1);
-            ParallelQuickSort rightTask = new ParallelQuickSort(numbers, pivot + 1, right);
+            ParallelQuickSort leftTask = 
+                new ParallelQuickSort(numbers, left, pivot - 1);
+            ParallelQuickSort rightTask = 
+                new ParallelQuickSort(numbers, pivot + 1, right);
     
             leftTask.fork();
             rightTask.fork();
@@ -267,10 +277,12 @@ public class ParallelQuickSort extends RecursiveAction {
         }
     }
 
-    public static List<Integer> parallelQuickSort(List<Integer> numbers) {
+    public static List<Integer> parallelQuickSort(
+            List<Integer> numbers) {
         List<Integer> sortedNumbers = new ArrayList<>(numbers);
         ForkJoinPool pool = ForkJoinPool.commonPool();
-        ParallelQuickSort task = new ParallelQuickSort(sortedNumbers, 0, sortedNumbers.size() - 1);
+        ParallelQuickSort task = new ParallelQuickSort(
+            sortedNumbers, 0, sortedNumbers.size() - 1);
         pool.invoke(task);
         return task.numbers;
     }
@@ -316,7 +328,8 @@ public class ParallelRankSort implements Runnable {
     List<Integer> sortedNumbers;
     private int i;
 
-    public ParallelRankSort(List<Integer> numbers, List<Integer> sortedNumbers, int i) {
+    public ParallelRankSort(
+            List<Integer> numbers, List<Integer> sortedNumbers, int i) {
         this.numbers = numbers;
         this.sortedNumbers = sortedNumbers;
         this.i = i;
@@ -338,7 +351,8 @@ public class ParallelRankSort implements Runnable {
         List<Integer> sortedNumbers = new ArrayList<>(numbers);
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for (int i = 0; i < numbers.size(); i++) {
-            ParallelRankSort task = new ParallelRankSort(numbers, sortedNumbers, i);
+            ParallelRankSort task = 
+                new ParallelRankSort(numbers, sortedNumbers, i);
             executor.submit(task);
         }
         executor.shutdown();
@@ -362,10 +376,140 @@ public class ParallelRankSort implements Runnable {
 我们通过 `executor.submit(task)` 将任务一个一个地加入到 `ExecutorService` 里，最后通过 `executor.shutdown()` 和 `executor.awaitTermination(60, TimeUnit.SECONDS)` 等待线程执行结束后，返回最后的结果 `sortedNumbers`。
 
 
-## 四、运行时间
+## 四、技术要点
+
+### 4.1 对比测试
+
+为了避免排序算法出错，尤其是对并行化的排序算法进行检验，我们需要进行对比测试。
+
+```python
+List<Integer> sortedNumbers = new ArrayList<>(numbers);
+if (verify) {
+    sortedNumbers.sort(Integer::compareTo);
+}
+if (verify) {
+    System.out.println(
+        "QuickSort - serial: " + sorted.equals(sortedNumbers));
+}
+```
+
+如果 `verify == true` 的话，就会通过 Java 自带的排序算法进行排序，得到一个用于对比的排序后数据，然后通过 `sorted.equals()` 对内容进行对比。
+
+通过这种方式，我们就可以保证及时地进行单元测试，保证算法没有错误。
+
+### 4.2 阈值
+
+分治算法会不断地将大任务分为小任务，但是如果我们分的小任务过小，就会创建太多的任务，会导致将大部分的计算资源消耗在创建线程和对任务分配的管理上，导致出现效率下降的问题。
+
+这时候我们可以对子任务大小进行判断，这里我设置了一个阈值 `THRESHOLD = 1024`，在子任务小于 `1024` 个数据时，直接进行串行的算法。
+
+```java
+protected void compute() {
+    if (right - left > THRESHOLD) {
+        // para-sort ...
+    } else {
+        // serial-sort ...
+    }
+}
+```
+
+通过增加阈值的方式，并行的快速排序和归并排序的速度都有了不错的提升，例如归并排序就从 83 ms 减少到了 20 ms。
+
+### 4.3 数据表示形式
+
+本次实验我选用了 `List<Integer>` 来存储中间的排序数据，因此相对于 `int[]` 的存储形式，性能有些下降。
+
+因为 `List<Integer>` 要在 `int` 和 `Integer` 之间进行装箱和拆箱，而且 `Integer.get(i)` 相较于 `int[i]` 的性能也会有点下降，因此执行较慢。
+
+但是使用 `List<Integer>` 相较于 `int[]` 来说，支持的数据类型更为广泛，兼容性更好，因此这里我依然选用了 `List<Integer>`。如果后续需要进一步提升性能的话，可以将 `List<Integer>` 改为 `int[]`。
+
+### 4.4 优化方向
+
+- 快速排序的 `partition` 可以进一步地并行化，使得快速排序的速度进一步提升；
+- 选用其他能够更好地并行化的算法，例如 DoubleMerge；
+- 对不同的线程设定不同的优先级。
 
 
-## 五、技术要点
+## 五、运行时间
+
+### 5.1 `random.txt` 运行时间
+
+我们多次执行 `Test.java`，以 `input/random.txt` 作为输入，得到的一个典型输出如下：
+
+```txt
+size of random.txt: 30000
+QuickSort - serial: order1.txt
+QuickSort - serial: 19 ms
+QuickSort - serial: true
+QuickSort - parallel: order2.txt
+QuickSort - parallel: 19 ms
+QuickSort - parallel: true
+RankSort - serial: order3.txt
+RankSort - serial: 3563 ms
+RankSort - serial: true
+RankSort - parallel: order4.txt
+RankSort - parallel: 591 ms
+RankSort - parallel: true
+MergeSort - serial: order5.txt
+MergeSort - serial: 36 ms
+MergeSort - serial: true
+MergeSort - parallel: order6.txt
+MergeSort - parallel: 18 ms
+MergeSort - parallel: true
+```
+
+我们取多次的输出求平均，最后得到的针对 30000 个数据的排序花费如下：
+
+| 算法                 | 串行    | 并行   |
+| -------------------- | ------- | ------ |
+| 快速排序 (QuickSort) | 19 ms   | 20 ms  |
+| 枚举排序 (RankSort)  | 3506 ms | 560 ms |
+| 归并排序 (MergeSort) | 32 ms   | 20 ms  |
+
+### 5.2 `random10.txt` 运行时间
+
+我们将 `random.txt` 复制成 10 行，将数据规模变为原来的 10 倍，也就是 300000 个数据。
+
+我们取多次的输出求平均，最后得到的针对 300000 个数据的排序花费如下：
+
+| 算法                 | 串行    | 并行   |
+| -------------------- | ------- | ------ |
+| 快速排序 (QuickSort) | 130 ms   | 77 ms  |
+| 枚举排序 (RankSort)  | 391086 ms | 60154 ms |
+| 归并排序 (MergeSort) | 159 ms   | 109 ms  |
+
+可以看出，在数据量更大的情况下，三种算法的并行算法均优于串行算法。
 
 
+## 六、结果分析
 
+### 6.1 快速排序
+
+在数据量较小时，快速排序的串行算法和并行算法相差无几。
+
+可能的原因如下：
+
+- 快速排序是一个分治任务，进行并行化的时候要考虑父任务和子任务的优先级，不能直接地并行处理。
+- Java 在创建子任务与子线程的时候，会花费大量资源在维护线程之间的通信与任务分配上，也就是并行额外开销较大。
+- 数据量较小，因此并行的额外开销相对于进行的计算，就显得更大。
+- 快速排序的 `partition` 仍然可以进一步地并行化。
+
+因此我们通过增大数据规模，我们就可以看出，串行并行加速比有着明显的下降，从原来的 1 变成了几乎为 1/2。
+
+### 6.2 枚举排序
+
+枚举排序并不是一个分治任务，却是一个天生就适合分治的算法，我们可以很简单地将外层循环拆成不同的任务，然后交由多个线程并行处理。
+
+我们计算加速比可知，30000 数据对应的加速比为 6.26，300000 数据对应的加速比为 6.50，两者都很接近我电脑的核心数 8 个。
+
+但是 300000 数据对应的排序时间却增加了上百倍，我个人推测是硬件的缓存不足以容纳那么大的数据量，亦或者 Java 进行了垃圾回收。
+
+### 6.3 归并排序
+
+归并排序也是一种分治算法，和快速排序十分类似。但是归并排序在这里慢于快速排序，其中一个很重要的原因是，归并排序的 `merge` 总是要复制一个 `leftArray` 和一个 `rightArray`，而快速排序的 `partition` 是在原数组上进行的。
+
+其他导致归并排序较慢的原因，也与快速排序差不多：
+
+- 快速排序是一个分治任务，进行并行化的时候要考虑父任务和子任务的优先级，不能直接地并行处理。
+- Java 在创建子任务与子线程的时候，会花费大量资源在维护线程之间的通信与任务分配上，也就是并行额外开销较大。
+- 数据量较小，因此并行的额外开销相对于进行的计算，就显得更大。

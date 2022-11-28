@@ -26,7 +26,7 @@ public class MergeSort {
         }
     }
 
-    private static void _mergeSort(List<Integer> numbers, int left, int right) {
+    public static void _mergeSort(List<Integer> numbers, int left, int right) {
         if (left < right) {
             int middle = (left + right) / 2;
             _mergeSort(numbers, left, middle);

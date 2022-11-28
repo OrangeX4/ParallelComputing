@@ -164,9 +164,11 @@ class Test {
     }
     
     public static void main(String[] args) {
-        String inputFile = "random.txt";
         // 是否检验排序结果
         boolean verify = true;
+        String inputFile = "random.txt";
+        test(inputFile, verify);
+        inputFile = "random10.txt";
         test(inputFile, verify);
     }
 }

@@ -6,6 +6,8 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
 public class ParallelMergeSort extends RecursiveAction {
+    private static final int THRESHOLD = 1024;
+
     public List<Integer> numbers;
     private int left;
     private int right;
@@ -40,7 +42,7 @@ public class ParallelMergeSort extends RecursiveAction {
 
     @Override
     protected void compute() {
-        if (left < right) {
+        if (right - left > THRESHOLD) {
             int middle = (left + right) / 2;
             
             ParallelMergeSort leftTask = new ParallelMergeSort(numbers, left, middle);
@@ -53,6 +55,8 @@ public class ParallelMergeSort extends RecursiveAction {
             rightTask.join();
 
             merge(numbers, left, middle, right);
+        } else {
+            MergeSort._mergeSort(numbers, left, right);
         }
     }
 

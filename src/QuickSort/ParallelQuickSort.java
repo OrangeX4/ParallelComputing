@@ -6,6 +6,8 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
 public class ParallelQuickSort extends RecursiveAction {
+    private static final int THRESHOLD = 1024;
+
     public List<Integer> numbers;
     private int left;
     private int right;
@@ -37,7 +39,7 @@ public class ParallelQuickSort extends RecursiveAction {
 
     @Override
     protected void compute() {
-        if (left < right) {
+        if (right - left > THRESHOLD) {
             int pivot = partition(numbers, left, right);
             ParallelQuickSort leftTask = new ParallelQuickSort(numbers, left, pivot - 1);
             ParallelQuickSort rightTask = new ParallelQuickSort(numbers, pivot + 1, right);
@@ -47,6 +49,8 @@ public class ParallelQuickSort extends RecursiveAction {
     
             leftTask.join();
             rightTask.join();
+        } else {
+            QuickSort._quickSort(numbers, left, right);
         }
     }
 
